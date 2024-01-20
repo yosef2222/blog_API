@@ -1,4 +1,5 @@
 <?php
+include_once 'helpers/helpers.php';
 header('Content-type: application/json');
 
 function getData($method)
@@ -29,6 +30,9 @@ $router = $urlList[0];
 $requestData = getData(getMethod());
 if (file_exists(realpath(dirname(__FILE__)) . '/routers/' . $router . '.php')) {
     include_once 'routers/' . $router . '.php';
+    route(getMethod(), $urlList, $requestData);
+} else if (is_null($router)) {
+    include_once 'home.php';
     route(getMethod(), $urlList, $requestData);
 } else {
     setHTTPStatus(404);

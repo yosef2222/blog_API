@@ -10,14 +10,34 @@ function route($method, $urlList, $requestData)
                 return;
             }
             $fullName = $requestData->body->fullName;
+            $fullName = strtolower(trim($fullName));
             $email = $requestData->body->email;
+            $email = strtolower(trim($email));
             $rawPassword = $requestData->body->password;
             $password = sha1($rawPassword);
 
-            $emailsResult = $conn->query("SELECT id FROM users WHERE email='$email'");
+            $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            $emailsResult = isset($row['id']) ? $row['id'] : null;
+
+
             if (is_null($emailsResult)) {
-                $addUser = $conn->query("INSERT INTO users (fullName, email, password) VALUES ('$fullName', '$email', '$password')");
-            }else{
+                $stmt = $conn->prepare("INSERT INTO users (fullName, email, password) VALUES (?, ?, ?)");
+                $stmt->bind_param("sss", $fullName, $email, $password);
+
+                if ($stmt->execute()) {
+                    echo "User added successfully.";
+                } else {
+                    echo "Error: " . $stmt->error;
+                    setHTTPStatus(500);
+                }
+                $stmt->close();
+                $conn->close();
+            } else {
                 echo "Email already has an account";
                 setHTTPStatus(409);
             }
