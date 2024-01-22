@@ -31,6 +31,17 @@ function route($method, $urlList, $requestData)
 
                 if ($stmt->execute()) {
                     echo "User added successfully.";
+                    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+                    $stmt->bind_param("s", $email);
+                    $stmt->execute();
+
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+                    $userId = isset($row['id']) ? $row['id'] : null;
+                    if (is_null($userId)) {
+                    } else {
+                        echo json_encode(createAuthToken($userId));
+                    }
                 } else {
                     echo "Error: " . $stmt->error;
                     setHTTPStatus(500);
@@ -45,6 +56,7 @@ function route($method, $urlList, $requestData)
             break;
 
         default:
+            echo "Bad request";
             setHTTPStatus(400);
             break;
     }

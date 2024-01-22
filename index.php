@@ -1,6 +1,5 @@
 <?php
 include_once 'helpers/helpers.php';
-header('Content-type: application/json');
 
 function getData($method)
 {

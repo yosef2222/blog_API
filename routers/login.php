@@ -26,7 +26,8 @@ function route($method, $urlList, $requestData)
                 setHTTPStatus(401);
                 echo 'Incorrect credentials.';
             } else {
-                generateAuthToken($userId);
+                $toke = updateAuthToken($userId);
+                echo $toke;
             }
 
             $stmt->close();
@@ -39,6 +40,6 @@ function route($method, $urlList, $requestData)
     }
 }
 
-function generateAuthToken($userId) {
-    
+function generateAuthToken($userId)
+{
 }
