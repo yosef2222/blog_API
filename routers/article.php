@@ -105,6 +105,19 @@ function route($method, $urlList, $requestData)
             }
             break;
         case 'PUT':
+            $token = getTokenFromHeaders();
+            $authed = isAuthentecated($token);
+            if (!$authed) {
+                setHTTPStatus(403);
+                echo "not authentecated";
+                return;
+            }
+            $userId = getUserId($token);
+            if (!admin($userId)) {
+                setHTTPStatus(403);
+                echo "User is not admin";
+                return;
+            }
             $conn = connectToDB();
             $slug = isset($_GET['slug']) ? $_GET['slug'] : null;
 
@@ -154,6 +167,19 @@ function route($method, $urlList, $requestData)
             break;
 
         case 'DELETE':
+            $token = getTokenFromHeaders();
+            $authed = isAuthentecated($token);
+            if (!$authed) {
+                setHTTPStatus(403);
+                echo "not authentecated";
+                return;
+            }
+            $userId = getUserId($token);
+            if (!admin($userId)) {
+                setHTTPStatus(403);
+                echo "User is not admin";
+                return;
+            }
             $conn = connectToDB();
             $slug = isset($_GET['slug']) ? $_GET['slug'] : null;
 
