@@ -13,6 +13,7 @@ function route($method, $urlList, $requestData)
             $fullName = strtolower(trim($fullName));
             $email = $requestData->body->email;
             $email = strtolower(trim($email));
+            $admin = $requestData->body->admin;
             $rawPassword = $requestData->body->password;
             $password = sha1($rawPassword);
 
@@ -26,8 +27,8 @@ function route($method, $urlList, $requestData)
 
 
             if (is_null($emailsResult)) {
-                $stmt = $conn->prepare("INSERT INTO users (fullName, email, password) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $fullName, $email, $password);
+                $stmt = $conn->prepare("INSERT INTO users (fullName, email, password, admin) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("sss", $fullName, $email, $password, $admin);
 
                 if ($stmt->execute()) {
                     echo "User added successfully.";

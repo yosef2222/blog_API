@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  php-app:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:latest
+    environment: ''
+      MYSQL_ROOT_PASSWORD: 
+      MYSQL_DATABASE: blog_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: '' 
+    ports:
+      - "3306:3306"

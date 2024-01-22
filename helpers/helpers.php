@@ -22,10 +22,10 @@ function setHTTPStatus($statusCode)
 
 function connectToDB()
 {
-    $servername = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $database = "blog_DB";
+    $servername = getenv('DB_SERVERNAME') ?: "127.0.0.1";
+    $username = getenv('DB_USER') ?: "root";
+    $password = getenv('DB_PASS') ?: "";
+    $database = getenv('DB_NAME') ?: "blog_DB";
     $conn = new mysqli($servername, $username, $password, $database);
     return $conn;
 }
@@ -126,7 +126,8 @@ function admin($userId)
     return isset($admin) ? $admin : false;
 }
 
-function generateSlug($title) {
+function generateSlug($title)
+{
     $cleanedTitle = preg_replace('/[^a-zA-Z0-9\s]/', '', $title);
 
     $lowercaseTitle = strtolower($cleanedTitle);
